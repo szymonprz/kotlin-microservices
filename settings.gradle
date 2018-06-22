@@ -1,0 +1,6 @@
+rootProject.name = 'kotlin-microservices'
+include 'eureka-service', 'booking-service' ,'restaurant-service', 'user-service'
+include 'utils'
+include 'zuul-server'
+include 'api-service'
+
