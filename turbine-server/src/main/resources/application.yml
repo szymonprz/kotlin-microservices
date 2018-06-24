@@ -1,0 +1,29 @@
+info:
+    component: Turbine Server
+
+server:
+    port: 8989
+
+spring:
+  application:
+    name: turbine-server
+
+eureka:
+    instance:
+        leaseRenewalIntervalInSeconds: 10
+        metadataMap:
+            instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+    client:
+        serviceUrl:
+            defaultZone: ${vcap.services.${PREFIX:}eureka.credentials.uri:http://user:password@localhost:8761}/eureka/
+                         #http://localhost:8761/eureka/
+        fetchRegistry: true
+
+logging:
+    level:
+        root: INFO
+        org.springframework.integration: DEBUG
+turbine:
+  aggregator:
+    cluster-config: API-SERVICE
+  app-config: api-service

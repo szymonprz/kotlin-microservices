@@ -15,7 +15,7 @@ import java.time.LocalTime
 
 @RestController
 @RequestMapping("/v1/booking")
-class BookingController(protected var bookingService: BookingService){
+class BookingController(protected var bookingService: BookingService) {
 
     /**
      * Fetch bookings with the specified name. A partial case-insensitive match
@@ -27,7 +27,7 @@ class BookingController(protected var bookingService: BookingService){
      */
     @GetMapping
     fun findByName(@RequestParam("name") name: String): ResponseEntity<Collection<Booking>> {
-        logger.info(String.format("booking-service findByName() invoked:{} for {} ", bookingService.javaClass.name, name))
+        LOG.info("booking-service findByName() invoked:{} for {} ", bookingService.javaClass.name, name)
         return try {
             val bookings = bookingService.findByName(name.toLowerCase())
             if (bookings.isNotEmpty())
@@ -35,7 +35,7 @@ class BookingController(protected var bookingService: BookingService){
             else
                 ResponseEntity(HttpStatus.NO_CONTENT)
         } catch (ex: Exception) {
-            logger.warn("Exception raised findByName REST Call", ex)
+            LOG.warn("Exception raised findByName REST Call", ex)
             ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
@@ -50,7 +50,7 @@ class BookingController(protected var bookingService: BookingService){
      */
     @GetMapping("/{id}")
     fun findById(@PathVariable("id") id: String): ResponseEntity<Entity<String>> {
-        logger.info(String.format("booking-service findById() invoked:{} for {} ", bookingService.javaClass.name, id))
+        LOG.info("booking-service findById() invoked:{} for {} ", bookingService.javaClass.name, id)
         return try {
             val booking = bookingService.findById(id)
             if (booking != null)
@@ -58,7 +58,7 @@ class BookingController(protected var bookingService: BookingService){
             else
                 ResponseEntity(HttpStatus.NO_CONTENT)
         } catch (ex: Exception) {
-            logger.warn("Exception raised findById REST Call {0}", ex)
+            LOG.warn("Exception raised findById REST Call {0}", ex)
             ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
@@ -73,21 +73,20 @@ class BookingController(protected var bookingService: BookingService){
      */
     @PostMapping
     fun add(@RequestBody bookingDto: BookingDto): ResponseEntity<Booking> {
-        logger.info(String.format("booking-service add() invoked: %s for %s", bookingService.javaClass.name, bookingDto.name))
+        LOG.info("booking-service add() invoked: %s for %s", bookingService.javaClass.name, bookingDto.name)
         val booking = Booking("", "", "", "", LocalDate.now(), LocalTime.now(), "")
         BeanUtils.copyProperties(bookingDto, booking)
         try {
             bookingService.add(booking)
         } catch (ex: Exception) {
-            logger.warn("Exception raised add Booking REST Call {0}", ex)
-            return ResponseEntity<Booking>(HttpStatus.UNPROCESSABLE_ENTITY)
+            LOG.warn("Exception raised add Booking REST Call {0}", ex)
+            return ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY)
         }
 
-        return ResponseEntity<Booking>(HttpStatus.CREATED)
+        return ResponseEntity(HttpStatus.CREATED)
     }
 
     companion object {
-
-        protected val logger: Logger = LogManager.getLogger(BookingController::class.java.name)
+        protected val LOG: Logger = LogManager.getLogger(BookingController::class.java.name)
     }
 }

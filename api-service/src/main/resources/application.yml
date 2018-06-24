@@ -1,6 +1,9 @@
 info:
   component: API Service
 
+
+server:
+  port: 7771
 spring:
     application:
         name: api-service
@@ -8,18 +11,6 @@ spring:
         proxyTargetClass: true
         # Added to fix -  java.lang.IllegalArgumentException: error at ::0 can't find referenced pointcut hystrixCommandAnnotationPointcut
         auto: false
-
-server:
-  port: 7771
-
-#security:
-#  oauth2:
-#    resource:
-#      userInfoUri: https://localhost:9001/auth/user
-
-#management:
-#  security:
-#    enabled: false
 
 hystrix:
   metrics:
@@ -43,10 +34,6 @@ hystrix:
           strategy: THREAD
           thread:
             timeoutInMilliseconds: 6000
-
-#ribbon:
-#  ConnectTimeout: 100
-#  ReadTimeout: 3000
 
 app:
   ConnectTimeout: 100
@@ -77,4 +64,4 @@ management:
   endpoints:
     web:
       exposure:
-        include : hystrix.stream
+        include: '*'

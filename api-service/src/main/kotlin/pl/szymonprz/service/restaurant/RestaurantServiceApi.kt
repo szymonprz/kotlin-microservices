@@ -5,12 +5,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.cloud.client.discovery.DiscoveryClient
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpMethod
 
 
 @RestController
@@ -43,9 +43,9 @@ class RestaurantServiceApi(val restTemplate: RestTemplate, val client: Discovery
         val hystrixCommand = RestaurantsHystrixCommand(restTemplate, name)
         val restaurants = hystrixCommand
                 .execute()
-        return if(restaurants != null){
+        return if (restaurants != null) {
             ResponseEntity(restaurants, HttpStatus.OK)
-        }else{
+        } else {
             ResponseEntity(HttpStatus.NO_CONTENT)
         }
     }
@@ -59,7 +59,7 @@ class RestaurantServiceApi(val restTemplate: RestTemplate, val client: Discovery
     }
 
 
-    class RestaurantsHystrixCommand(private val restTemplate: RestTemplate, private val restaurantName: String) : HystrixCommand<Collection<Restaurant>?>({"restaurant-service"}) {
+    class RestaurantsHystrixCommand(private val restTemplate: RestTemplate, private val restaurantName: String) : HystrixCommand<Collection<Restaurant>?>({ "restaurant-service" }) {
         override fun run(): Collection<Restaurant>? {
             val url = "http://restaurant-service/v1/restaurants?name=$restaurantName"
             LOG.debug("GetRestaurant from URL: {}", url)

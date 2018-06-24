@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient
 import org.springframework.cloud.netflix.hystrix.EnableHystrix
@@ -40,17 +39,6 @@ class ApiApp {
         val connectionFactory = CachingConnectionFactory(rabbitMqHost)
         return connectionFactory.rabbitConnectionFactory
     }
-
-
-//    @Bean(name = ["hystrixRegistrationBean"])
-//    fun servletRegistrationBean(): ServletRegistrationBean<*> {
-//        val registration = ServletRegistrationBean(
-//                HystrixMetricsStreamServlet(), "/actuator/hystrix.stream")
-//        registration.setName("hystrixServlet")
-//        registration.setLoadOnStartup(1)
-//        return registration
-//    }
-
 }
 
 fun main(args: Array<String>) {

@@ -6,7 +6,6 @@ import org.springframework.beans.BeanUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import pl.szymonprz.user.api.UserDto
 import pl.szymonprz.user.application.UserService
 import pl.szymonprz.user.domain.model.Entity
 import pl.szymonprz.user.domain.model.User
@@ -26,7 +25,7 @@ class UserController(protected var userService: UserService) {
      */
     @GetMapping
     fun findByName(@RequestParam("name") name: String): ResponseEntity<Collection<User>> {
-        logger.info(String.format("user-service findByName() invoked:{} for {} ", userService.javaClass.name, name))
+        LOG.info("user-service findByName() invoked:{} for {} ", userService.javaClass.name, name)
         return try {
             val bookings = userService.findByName(name.toLowerCase())
             if (bookings.isNotEmpty())
@@ -34,7 +33,7 @@ class UserController(protected var userService: UserService) {
             else
                 ResponseEntity(HttpStatus.NO_CONTENT)
         } catch (ex: Exception) {
-            logger.warn("Exception raised findByName User REST Call", ex)
+            LOG.warn("Exception raised findByName User REST Call", ex)
             ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
@@ -49,7 +48,7 @@ class UserController(protected var userService: UserService) {
      */
     @GetMapping("/{id}")
     fun findById(@PathVariable("id") id: String): ResponseEntity<Entity<String>> {
-        logger.info(String.format("user-service findById() invoked:{} for {} ", userService.javaClass.name, id))
+        LOG.info("user-service findById() invoked:{} for {} ", userService.javaClass.name, id)
         return try {
             val booking = userService.findById(id)
             if (booking != null)
@@ -57,7 +56,7 @@ class UserController(protected var userService: UserService) {
             else
                 ResponseEntity(HttpStatus.NO_CONTENT)
         } catch (ex: Exception) {
-            logger.warn("Exception raised findById User REST Call {0}", ex)
+            LOG.warn("Exception raised findById User REST Call {0}", ex)
             ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
@@ -72,19 +71,19 @@ class UserController(protected var userService: UserService) {
      */
     @PostMapping
     fun add(@RequestBody userDto: UserDto): ResponseEntity<User> {
-        logger.info(String.format("user-service add() invoked: %s for %s", userService.javaClass.name, userDto.name))
+        LOG.info("user-service add() invoked: {} for {}", userService.javaClass.name, userDto.name)
         val user = User("", "", "", "", "")
         BeanUtils.copyProperties(userDto, user)
         try {
             userService.add(user)
         } catch (ex: Exception) {
-            logger.warn("Exception raised add User REST Call {0}", ex)
+            LOG.warn("Exception raised add User REST Call {0}", ex)
             return ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY)
         }
         return ResponseEntity(HttpStatus.CREATED)
     }
 
     companion object {
-        protected val logger: Logger = LogManager.getLogger(UserController::class.java.name)
+        protected val LOG: Logger = LogManager.getLogger(UserController::class.java.name)
     }
 }
